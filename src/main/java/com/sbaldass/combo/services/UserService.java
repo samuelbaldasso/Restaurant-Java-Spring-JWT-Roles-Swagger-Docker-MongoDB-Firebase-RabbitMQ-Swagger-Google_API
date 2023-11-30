@@ -8,6 +8,8 @@ import com.sbaldass.combo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +31,19 @@ public class UserService {
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        Role role = roleRepository.findByName("ROLE_ADMIN");
+        Role role = roleRepository.findByName("ADMIN");
         if(role == null){
             role = checkRoleExist();
         }
         user.setRoles(List.of(role));
+        return userRepository.save(user);
+    }
+
+    public User alterUser(UserDTO userDto, Long id) throws Exception{
+        User user = new User();
+        user.setId(id);
+        user.setUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword());
         return userRepository.save(user);
     }
 
@@ -60,4 +70,9 @@ public class UserService {
         role.setName("ROLE_ADMIN");
         return roleRepository.save(role);
     }
+
+    public void deleteUser(Long id) throws Exception{
+        userRepository.deleteById(id);
+    }
+
 }

@@ -29,4 +29,15 @@ public class UserController {
   public User create(@RequestBody UserDTO userDTO) throws Exception {
       return userService.saveUser(userDTO);
   }
+
+  @PutMapping("/{id}")
+  public User putUser(@PathVariable Long id, @RequestBody UserDTO userDTO) throws Exception {
+    return userService.alterUser(userDTO, id);
+  }
+
+  @DeleteMapping("/{id}")
+  public void delete(@PathVariable Long id) throws Exception {
+    userService.deleteUser(id);
+  }
+
 }
