@@ -8,11 +8,8 @@ import com.sbaldass.combo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,23 +44,35 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Optional<User> findUserById(Long id) throws Exception{
-        return userRepository.findById(id);
+    public User findUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
     }
 
     public List<UserDTO> findAllUsers() throws Exception{
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map(this::mapToUserDto)
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    private UserDTO mapToUserDto(User user){
-        UserDTO userDto = new UserDTO();
-        userDto.setUsername(user.getUsername());
-        userDto.setEmail(user.getEmail());
-        return userDto;
+    public UserDTO convertToDTO(User usuario){
+        UserDTO usuarioDTO = new UserDTO();
+        usuarioDTO.setId(usuario.getId());
+        usuarioDTO.setUsername(usuario.getUsername());
+        usuarioDTO.setEmail(usuario.getEmail());
+        usuarioDTO.setPassword(usuario.getPassword());
+        return usuarioDTO;
     }
+
+    public User convertToEntity(User usuario){
+        User usuarioDTO = new User();
+        usuarioDTO.setId(usuario.getId());
+        usuarioDTO.setUsername(usuario.getUsername());
+        usuarioDTO.setEmail(usuario.getEmail());
+        usuarioDTO.setPassword(usuario.getPassword());
+        return usuarioDTO;
+    }
+
 
     private Role checkRoleExist(){
         Role role = new Role();

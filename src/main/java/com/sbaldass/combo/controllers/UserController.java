@@ -21,7 +21,7 @@ public class UserController {
   }
 
   @GetMapping("/{id}")
-  public Optional<User> getById(@PathVariable Long id) throws Exception {
+  public User getById(@PathVariable Long id) throws Exception {
     return userService.findUserById(id);
   }
 

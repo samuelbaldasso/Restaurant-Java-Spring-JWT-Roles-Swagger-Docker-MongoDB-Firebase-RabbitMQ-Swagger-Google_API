@@ -38,7 +38,7 @@ public class SecurityConfig {
                         authorize
                                 .requestMatchers("/users/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
-                                .anyRequest().permitAll())
+                                .anyRequest().authenticated())
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
