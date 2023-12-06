@@ -8,7 +8,7 @@ import com.sbaldass.combo.dto.ItemPedidoDTO;
 import com.sbaldass.combo.dto.PedidoDTO;
 import com.sbaldass.combo.repositories.PedidoRepository;
 import com.sbaldass.combo.repositories.PratoRepository;
-import jakarta.persistence.EntityNotFoundException;
+import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

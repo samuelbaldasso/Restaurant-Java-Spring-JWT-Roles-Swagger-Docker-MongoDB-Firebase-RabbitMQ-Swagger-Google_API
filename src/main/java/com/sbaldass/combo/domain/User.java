@@ -1,7 +1,7 @@
 package com.sbaldass.combo.domain;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
+import javax.persistence.*;
+import javax.validation.constraints.Email;
 import lombok.Data;
 
 import java.util.ArrayList;

@@ -2,7 +2,7 @@ package com.sbaldass.combo.config;
 
 import com.sbaldass.combo.domain.User;
 import io.jsonwebtoken.*;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
 import javax.naming.AuthenticationException;
@@ -73,9 +73,8 @@ public class JwtUtils {
         return claims.getSubject();
     }
 
-    private List<String> getRoles(Claims claims) {
-        List<String> roles = (List<String>) claims.get("roles");
-        return roles;
+    private Object getRoles(Claims claims) {
+        return claims.get("roles");
     }
 
 

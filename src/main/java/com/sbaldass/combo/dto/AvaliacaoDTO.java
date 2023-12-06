@@ -1,8 +1,5 @@
 package com.sbaldass.combo.dto;
 
-import com.sbaldass.combo.domain.Prato;
-import com.sbaldass.combo.domain.User;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

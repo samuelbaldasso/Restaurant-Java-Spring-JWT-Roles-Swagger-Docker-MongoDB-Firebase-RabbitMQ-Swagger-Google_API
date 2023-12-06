@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -34,12 +35,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((authorize) ->
+                .authorizeRequests((authorize) ->
                         authorize
-                                .requestMatchers("/users/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                                .antMatchers("/users/**").permitAll()
+                                .antMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                                .antMatchers( "/v3/api-docs/**",
+                                        "/swagger-ui/**",
+                                        "/v2/api-docs/**",
+                                        "/swagger-resources/**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors(httpSecurityCorsConfigurer -> new CorsConfiguration().applyPermitDefaultValues())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

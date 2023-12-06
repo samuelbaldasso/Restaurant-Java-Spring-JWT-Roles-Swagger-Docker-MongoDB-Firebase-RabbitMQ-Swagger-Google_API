@@ -3,7 +3,7 @@ package com.sbaldass.combo.services;
 import com.sbaldass.combo.domain.Prato;
 import com.sbaldass.combo.dto.PratoDTO;
 import com.sbaldass.combo.repositories.PratoRepository;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
