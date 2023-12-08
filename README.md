@@ -16,7 +16,7 @@ Este projeto é um backend para um sistema de restaurantes. Ele oferece funciona
 
 ## Documentação da API
 
-A documentação completa das APIs está disponível no endpoint `/swagger-ui`. A documentação é interativa e permite testar os endpoints diretamente pela interface do Swagger.
+A documentação completa das APIs está disponível no endpoint `/swagger-ui/`. A documentação é interativa e permite testar os endpoints diretamente pela interface do Swagger.
 
 ## Instruções de Instalação e Uso
 
@@ -26,7 +26,7 @@ A documentação completa das APIs está disponível no endpoint `/swagger-ui`. 
 
 3. Inicie o servidor: execute a aplicação pela classe main da mesma na sua IDE preferida (recomendo Intellij IDEA Community ou Ultimate).
 
-4. Acesse `http://localhost:8080/swagger-ui` em seu navegador para visualizar a documentação da API.
+4. Acesse `http://localhost:8080/swagger-ui/` em seu navegador para visualizar a documentação da API.
 
 ---
 
