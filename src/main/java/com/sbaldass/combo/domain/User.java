@@ -2,6 +2,8 @@ package com.sbaldass.combo.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -19,5 +21,6 @@ public class User {
     private String email;
     private String password;
     @ManyToMany
+    @JsonManagedReference
     private List<Role> roles = new ArrayList<>();
 }
