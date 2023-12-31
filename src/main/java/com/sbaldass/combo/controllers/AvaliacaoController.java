@@ -16,13 +16,9 @@ public class AvaliacaoController {
     private AvaliacaoService avaliacaoService;
 
     @GetMapping
-    public ResponseEntity<List<AvaliacaoDTO>> getAllAvaliacoes() {
-        try {
+    public ResponseEntity<List<AvaliacaoDTO>> getAllAvaliacoes() throws Exception{
             List<AvaliacaoDTO> avaliacoes = avaliacaoService.findAll();
             return ResponseEntity.ok(avaliacoes);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
     }
 
     @GetMapping("/{id}")

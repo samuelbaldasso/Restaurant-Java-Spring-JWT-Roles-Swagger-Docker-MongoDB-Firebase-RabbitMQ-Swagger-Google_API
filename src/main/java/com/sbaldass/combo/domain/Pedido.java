@@ -21,7 +21,7 @@ public class Pedido {
 
     private LocalDateTime dataHora;
 
-    @OneToMany(mappedBy = "pedido")
+    @OneToMany
     private List<ItemPedido> itens;
 
     private String status;

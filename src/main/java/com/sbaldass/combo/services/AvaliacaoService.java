@@ -50,7 +50,7 @@ public class AvaliacaoService {
         AvaliacaoDTO avaliacaoDTO = new AvaliacaoDTO();
         avaliacaoDTO.setId(avaliacao.getId());
         avaliacaoDTO.setUserId(avaliacao.getUsuario().getId());
-        avaliacaoDTO.setPratoId(avaliacao.getPrato().getId());
+        avaliacaoDTO.setPratoId(avaliacao.getPratoId());
         avaliacaoDTO.setPontuacao(avaliacao.getPontuacao());
         avaliacaoDTO.setComentario(avaliacao.getComentario());
         return avaliacaoDTO;
@@ -62,7 +62,7 @@ public class AvaliacaoService {
         Prato prato = pratoRepository.findById(avaliacaoDTO.getPratoId()).orElse(null);
         avaliacao.setId(avaliacaoDTO.getId());
         avaliacao.setUsuario(usuario);
-        avaliacao.setPrato(prato);
+        avaliacao.setPratoId(avaliacaoDTO.getPratoId());
         avaliacao.setPontuacao(avaliacaoDTO.getPontuacao());
         avaliacao.setComentario(avaliacaoDTO.getComentario());
         return avaliacao;

@@ -44,7 +44,7 @@ public class ReservaService {
     private ReservaDTO convertToDTO(Reserva reserva) {
         ReservaDTO reservaDTO = new ReservaDTO();
         reservaDTO.setId(reserva.getId());
-        reservaDTO.setUsuarioId(reserva.getUsuario().getId()); // Assumindo que Usuario tem um campo id
+        reservaDTO.setUsuarioId(reserva.getUsuario().getId());
         reservaDTO.setDataHora(reserva.getDataHora());
         reservaDTO.setNumeroPessoas(reserva.getNumeroPessoas());
         reservaDTO.setStatus(reserva.getStatus());

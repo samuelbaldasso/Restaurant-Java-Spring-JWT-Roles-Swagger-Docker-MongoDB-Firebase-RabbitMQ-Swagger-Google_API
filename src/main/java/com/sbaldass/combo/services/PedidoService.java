@@ -55,7 +55,13 @@ public class PedidoService {
     public Pedido atualizarPedido(Long id, Pedido pedidoAtualizado) throws Exception {
         try {
             return pedidoRepository.findById(id)
-                    .map(pedido -> pedidoRepository.save(pedido))
+                    .map((Pedido pedido) -> {
+                        pedido.setItens(pedidoAtualizado.getItens());
+                        pedido.setDataHora(pedidoAtualizado.getDataHora());
+                        pedido.setTotal(pedidoAtualizado.getTotal());
+                        pedido.setStatus(pedidoAtualizado.getStatus());
+                        return pedidoRepository.save(pedido);
+                            })
                     .orElseGet(() -> {
                         pedidoAtualizado.setId(id);
                         return pedidoRepository.save(pedidoAtualizado);
@@ -73,35 +79,6 @@ public class PedidoService {
         }
     }
 
-    private ItemPedidoDTO convertItemPedidoToDTO(ItemPedido itemPedido) {
-        ItemPedidoDTO itemPedidoDTO = new ItemPedidoDTO();
-        itemPedidoDTO.setId(itemPedido.getId());
-        itemPedidoDTO.setPedidoId(itemPedido.getPedido().getId());
-        itemPedidoDTO.setPratoId(itemPedido.getPrato().getId());
-        itemPedidoDTO.setQuantidade(itemPedido.getQuantidade());
-        itemPedidoDTO.setPrecoUnitario(itemPedido.getPrecoUnitario());
-
-        return itemPedidoDTO;
-    }
-
-    private ItemPedido convertItemPedidoDTOToEntity(ItemPedidoDTO itemPedidoDTO) {
-        ItemPedido itemPedido = new ItemPedido();
-        itemPedido.setId(itemPedidoDTO.getId());
-
-        Pedido pedido = pedidoRepository.findById(itemPedidoDTO.getPedidoId())
-                .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + itemPedidoDTO.getPedidoId()));
-        itemPedido.setPedido(pedido);
-
-        Prato prato = pratoRepository.findById(itemPedidoDTO.getPratoId())
-                .orElseThrow(() -> new EntityNotFoundException("Prato não encontrado com ID: " + itemPedidoDTO.getPratoId()));
-        itemPedido.setPrato(prato);
-
-        itemPedido.setQuantidade(itemPedidoDTO.getQuantidade());
-        itemPedido.setPrecoUnitario(itemPedidoDTO.getPrecoUnitario());
-
-        return itemPedido;
-    }
-
     public PedidoDTO convertToDTO(Pedido pedido) {
         PedidoDTO pedidoDTO = new PedidoDTO();
         pedidoDTO.setId(pedido.getId());
@@ -109,15 +86,21 @@ public class PedidoService {
         pedidoDTO.setStatus(pedido.getStatus());
         pedidoDTO.setTotal(pedido.getTotal());
         pedidoDTO.setUsuarioId(pedido.getUsuario().getId());
-
-        List<ItemPedidoDTO> itensDTO = pedido.getItens().stream()
-                .map(this::convertItemPedidoToDTO)
-                .collect(Collectors.toList());
-        pedidoDTO.setItens(itensDTO);
-
         return pedidoDTO;
     }
+    private ItemPedido convertItemPedidoDTOToEntity(ItemPedidoDTO itemPedidoDTO) {
+        ItemPedido itemPedido = new ItemPedido();
+        itemPedido.setId(itemPedidoDTO.getId());
 
+        Prato prato = pratoRepository.findById(itemPedidoDTO.getPratoId())
+                .orElseThrow(() -> new EntityNotFoundException("Prato não encontrado com ID: " + itemPedidoDTO.getPratoId()));
+        itemPedido.setPratoId(prato.getId());
+
+        itemPedido.setQuantidade(itemPedidoDTO.getQuantidade());
+        itemPedido.setPrecoUnitario(itemPedidoDTO.getPrecoUnitario());
+
+        return itemPedido;
+    }
     public Pedido convertToEntity(PedidoDTO pedidoDTO) throws Exception {
         Pedido pedido = new Pedido();
         pedido.setId(pedidoDTO.getId());
@@ -128,18 +111,7 @@ public class PedidoService {
         User usuario = usuarioService.findUserById(pedidoDTO.getUsuarioId());
         pedido.setUsuario(usuario);
 
-        List<ItemPedido> itens = pedidoDTO.getItens().stream()
-                .map(this::convertItemPedidoDTOToEntity)
-                .collect(Collectors.toList());
-
-        for (ItemPedido item : itens) {
-            item.setPedido(pedido);
-        }
-
-        pedido.setItens(itens);
-
         return pedido;
     }
-
 
 }

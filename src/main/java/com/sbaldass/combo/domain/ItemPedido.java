@@ -1,6 +1,7 @@
 package com.sbaldass.combo.domain;
 
 import javax.persistence.*;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,11 +17,9 @@ public class ItemPedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Pedido pedido;
+    private Long pratoId;
 
-    @ManyToOne
-    private Prato prato;
+    private Long pedidoId;
 
     private Integer quantidade;
     private Double precoUnitario;

@@ -17,11 +17,8 @@ public class PedidoDTO {
 
     private Long id;
     private LocalDateTime dataHora;
-    private List<ItemPedidoDTO> itens;
     private String status;
     private Double total;
     private Long usuarioId;
-
-    private UserService usuarioService;
 
 }

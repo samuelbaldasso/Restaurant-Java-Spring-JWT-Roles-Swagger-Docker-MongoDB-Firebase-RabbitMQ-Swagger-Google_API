@@ -18,8 +18,4 @@ public class ItemPedidoDTO {
     private Long pratoId;
     private Integer quantidade;
     private Double precoUnitario;
-
-    private PedidoService pedidoService;
-    private PratoService pratoService;
-
 }

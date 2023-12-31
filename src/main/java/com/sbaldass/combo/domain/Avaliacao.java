@@ -19,8 +19,7 @@ public class Avaliacao {
     @ManyToOne
     private User usuario;
 
-    @ManyToOne
-    private Prato prato;
+    private Long pratoId;
 
     private Integer pontuacao;
     private String comentario;

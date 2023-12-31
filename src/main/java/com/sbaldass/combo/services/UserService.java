@@ -42,7 +42,7 @@ public class UserService {
 
         existingUser.setUsername(userDto.getUsername());
         existingUser.setEmail(userDto.getEmail());
-        existingUser.setPassword(userDto.getPassword());
+        existingUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
         return userRepository.save(existingUser);
     }
 
