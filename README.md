@@ -20,13 +20,19 @@ A documentação completa das APIs está disponível no endpoint `/swagger-ui/`.
 
 ## Instruções de Instalação e Uso
 
-1. Clone o repositório: git clone [URL_DO_REPOSITORIO]
+1. Clone o repositório: `git clone [URL_DO_REPOSITORIO]`
 
-2. Navegue até a pasta do projeto e instale as dependências: cd [NOME_DA_PASTA_DO_PROJETO] e depois rodar o comando mvm install para gerar a atualização das dependências e o JAR da aplicação (caso desejar).
+2. Navegue até a pasta do projeto e instale as dependências: `cd [NOME_DA_PASTA_DO_PROJETO]` e depois execute `mvn install` para gerar a atualização das dependências e o JAR da aplicação (caso desejar).
 
-3. Inicie o servidor: execute a aplicação pela classe main da mesma na sua IDE preferida (recomendo Intellij IDEA Community ou Ultimate).
+3. **Instalação do PostgreSQL 14**:
+   - Baixe o PostgreSQL 14 do site oficial: [Download PostgreSQL](https://www.postgresql.org/download/).
+   - Siga as instruções de instalação para o seu sistema operacional.
+   - Durante a instalação, defina `postgres` como o nome de usuário e `admin` como a senha para o superusuário do PostgreSQL.
+   - Crie um novo banco de dados chamado `restaurante_db`.
 
-4. Acesse `http://localhost:8080/swagger-ui/` em seu navegador para visualizar a documentação da API.
+4. Inicie o servidor: execute a aplicação pela classe main da mesma na sua IDE preferida (recomendo Intellij IDEA Community ou Ultimate).
+
+5. Acesse `http://localhost:8080/swagger-ui/` em seu navegador para visualizar a documentação da API.
 
 ---
 
