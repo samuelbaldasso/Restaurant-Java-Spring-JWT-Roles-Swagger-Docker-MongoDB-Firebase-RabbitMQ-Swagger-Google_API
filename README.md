@@ -31,7 +31,3 @@ A documentação completa das APIs está disponível no endpoint `/swagger-ui/`.
 ---
 
 Desenvolvido com ❤️ por Samuel Baldasso
-
-PS: Se preferir, o projeto estará também em ambiente de produção no link abaixo:
-
-https://combo-backend.onrender.com
