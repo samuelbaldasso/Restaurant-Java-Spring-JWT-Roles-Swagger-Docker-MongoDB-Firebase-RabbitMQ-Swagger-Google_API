@@ -3,6 +3,8 @@ package com.sbaldass.combo.config;
 import com.sbaldass.combo.domain.User;
 import io.jsonwebtoken.*;
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.naming.AuthenticationException;
@@ -12,16 +14,22 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtUtils {
-    private final String secret_key = "$2a$12$lJKl82/VpPlvf08mlfjDmeuzKxMNbmldmoL7gEnK5vQc05cWpUu9e";
 
-    private final JwtParser jwtParser;
+    @Value("${app.jwtSecret}")
+    private String secret_key;
 
-    private final String TOKEN_HEADER = "Authorization";
-    private final String TOKEN_PREFIX = "Bearer ";
+    private JwtParser jwtParser;
 
-    public JwtUtils() {
-        this.jwtParser = Jwts.parser().setSigningKey(secret_key);
+    private JwtParser getJwtParser() {
+        if (jwtParser == null) {
+            if (secret_key == null || secret_key.trim().isEmpty()) {
+                throw new IllegalArgumentException("JWT secret key cannot be null or empty");
+            }
+            jwtParser = Jwts.parser().setSigningKey(secret_key);
+        }
+        return jwtParser;
     }
+
 
     public String createToken(User user) {
         Claims claims = Jwts.claims().setSubject(user.getEmail());
@@ -37,7 +45,7 @@ public class JwtUtils {
     }
 
     private Claims parseJwtClaims(String token) {
-        return jwtParser.parseClaimsJws(token).getBody();
+        return getJwtParser().parseClaimsJws(token).getBody();
     }
 
     public Claims resolveClaims(HttpServletRequest req) {
@@ -58,7 +66,9 @@ public class JwtUtils {
 
     public String resolveToken(HttpServletRequest request) {
 
+        String TOKEN_HEADER = "Authorization";
         String bearerToken = request.getHeader(TOKEN_HEADER);
+        String TOKEN_PREFIX = "Bearer ";
         if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
             return bearerToken.substring(TOKEN_PREFIX.length());
         }
