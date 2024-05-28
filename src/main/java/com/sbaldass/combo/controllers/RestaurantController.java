@@ -28,11 +28,13 @@ public class RestaurantController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Restaurant createRestaurante(@RequestBody Restaurant restaurante) {
         return restauranteService.save(restaurante);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Restaurant> updateRestaurante(@PathVariable String id, @RequestBody Restaurant restauranteDetails) {
         Optional<Restaurant> restaurante = restauranteService.findById(id);
 
@@ -48,6 +50,7 @@ public class RestaurantController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteRestaurante(@PathVariable String id) {
         if (restauranteService.findById(id).isPresent()) {
             restauranteService.deleteById(id);
