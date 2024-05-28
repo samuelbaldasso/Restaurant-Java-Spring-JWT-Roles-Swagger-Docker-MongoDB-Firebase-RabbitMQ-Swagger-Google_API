@@ -1,12 +1,11 @@
 package com.sbaldass.combo.repositories;
 
 import com.sbaldass.combo.domain.Role;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.sbaldass.combo.domain.RoleName;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface RoleRepository extends JpaRepository<Role, Long> {
-    Optional<Role> findByName(String name);
-
-    boolean existsByName(String name);
+public interface RoleRepository extends MongoRepository<Role, Long> {
+    Optional<Role> findByName(RoleName name);
 }

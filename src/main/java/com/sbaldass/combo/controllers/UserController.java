@@ -1,42 +1,44 @@
 package com.sbaldass.combo.controllers;
 
 import com.sbaldass.combo.domain.User;
-import com.sbaldass.combo.dto.UserDTO;
 import com.sbaldass.combo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
 @RequestMapping("/users")
+@RestController
 public class UserController {
-  @Autowired
-  public UserService userService;
+    private UserService userService;
 
-  @GetMapping
-  public List<UserDTO> getAll() throws Exception {
-    return userService.findAllUsers();
-  }
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
-  @GetMapping("/{id}")
-  public User getById(@PathVariable Long id) throws Exception {
-    return userService.findUserById(id);
-  }
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<User> authenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-  @PostMapping
-  public User create(@RequestBody UserDTO userDTO) throws Exception {
-      return userService.saveUser(userDTO);
-  }
+        User currentUser = (User) authentication.getPrincipal();
 
-  @PutMapping("/{id}")
-  public User putUser(@PathVariable Long id, @RequestBody UserDTO userDTO) throws Exception {
-    return userService.alterUser(userDTO, id);
-  }
+        return ResponseEntity.ok(currentUser);
+    }
 
-  @DeleteMapping("/{id}")
-  public void delete(@PathVariable Long id) throws Exception {
-    userService.deleteUser(id);
-  }
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<User>> allUsers() {
+        List <User> users = userService.allUsers();
+
+        return ResponseEntity.ok(users);
+    }
 
 }

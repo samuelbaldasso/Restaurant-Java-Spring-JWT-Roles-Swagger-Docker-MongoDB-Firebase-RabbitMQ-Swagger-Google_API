@@ -1,71 +1,80 @@
 package com.sbaldass.combo.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotNull;
+import com.sbaldass.combo.services.JwtService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-@Configuration
+@Component
 public class JwtAuthFilter extends OncePerRequestFilter {
+    private HandlerExceptionResolver handlerExceptionResolver;
+    private JwtService jwtService;
+    private UserDetailsService userDetailsService;
 
     @Autowired
-    private final JwtUtils jwtUtil;
-    @Autowired
-    private final ObjectMapper mapper;
-
-    public JwtAuthFilter(JwtUtils jwtUtil, ObjectMapper mapper) {
-        this.jwtUtil = jwtUtil;
-        this.mapper = mapper;
+    public JwtAuthFilter(
+            JwtService jwtService,
+            UserDetailsService userDetailsService,
+            HandlerExceptionResolver handlerExceptionResolver
+    ) {
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+        this.handlerExceptionResolver = handlerExceptionResolver;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Map<String, Object> errorDetails = new HashMap<>();
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
+    ) throws ServletException, IOException {
+        final String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         try {
-            String accessToken = jwtUtil.resolveToken(request);
-            if (accessToken == null) {
-                filterChain.doFilter(request, response);
-                return;
+            final String jwt = authHeader.substring(7);
+            final String userEmail = jwtService.extractUsername(jwt);
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            if (userEmail != null && authentication == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+
+                if (jwtService.isTokenValid(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
-            System.out.println("token : " + accessToken);
-            Claims claims = jwtUtil.resolveClaims(request);
 
-            assert claims != null;
-            if (jwtUtil.validateClaims(claims)) {
-                String email = claims.getSubject();
-                System.out.println("email : " + email);
-                Authentication authentication =
-                        new UsernamePasswordAuthenticationToken(email, "", new ArrayList<>());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-
-        } catch (Exception e) {
-            errorDetails.put("message", "Authentication Error");
-            errorDetails.put("details", e.getMessage());
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-            mapper.writeValue(response.getWriter(), errorDetails);
-
+            filterChain.doFilter(request, response);
+        } catch (Exception exception) {
+            handlerExceptionResolver.resolveException(request, response, null, exception);
         }
-        filterChain.doFilter(request, response);
-    }
+
 }
+}
+

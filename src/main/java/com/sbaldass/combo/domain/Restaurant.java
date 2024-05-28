@@ -8,23 +8,17 @@ import lombok.extern.jackson.Jacksonized;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Jacksonized
-@Document(collection = "roles")
-public class Role{
+@Document(collection = "restaurants")
+public class Restaurant {
     @Id
     private String id;
-
-    private RoleName name;
-
+    private String name;
+    private String location;
     private String description;
 
-    private Date createdAt;
-
-    private Date updatedAt;
 }
