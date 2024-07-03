@@ -9,6 +9,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -28,11 +29,11 @@ public class RoleSeeder implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     private void loadRoles() {
-        RoleName[] roleNames = new RoleName[]{RoleName.USER, RoleName.ADMIN, RoleName.SUPER_ADMIN};
+        RoleName[] roleNames = new RoleName[]{RoleName.ADMIN, RoleName.MOTOBOY, RoleName.CUSTOMER};
         Map<RoleName, String> roleDescriptionMap = Map.of(
-                RoleName.USER, "Default user role",
+                RoleName.MOTOBOY, "Default user role",
                 RoleName.ADMIN, "Administrator role",
-                RoleName.SUPER_ADMIN, "Super admin role"
+                RoleName.CUSTOMER, "Super admin role"
         );
 
         Arrays.stream(roleNames).forEach((roleName) -> {
@@ -44,6 +45,8 @@ public class RoleSeeder implements ApplicationListener<ContextRefreshedEvent> {
                 roleToCreate.setName(roleName);
                 roleToCreate
                         .setDescription(roleDescriptionMap.get(roleName));
+                roleToCreate
+                        .setCreatedAt(LocalDate.now());
 
                 roleRepository.save(roleToCreate);
             });

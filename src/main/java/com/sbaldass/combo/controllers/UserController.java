@@ -1,15 +1,14 @@
 package com.sbaldass.combo.controllers;
 
 import com.sbaldass.combo.domain.User;
+import com.sbaldass.combo.dto.RegisterUserDTO;
 import com.sbaldass.combo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,4 +40,15 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<User> update(@RequestBody RegisterUserDTO user, @PathVariable String id){
+        return ResponseEntity.ok(userService.update(user, id));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public void delete(@PathVariable String id){
+        userService.delete(id);
+    }
 }

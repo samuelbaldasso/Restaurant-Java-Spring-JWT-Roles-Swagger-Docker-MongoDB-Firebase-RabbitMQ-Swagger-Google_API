@@ -6,6 +6,7 @@ import com.sbaldass.combo.dto.LoginUserDTO;
 import com.sbaldass.combo.dto.RegisterUserDTO;
 import com.sbaldass.combo.services.AuthService;
 import com.sbaldass.combo.services.JwtService;
+import com.sbaldass.combo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +21,13 @@ public class AuthController {
 
     private AuthService authenticationService;
 
+    private UserService userService;
+
     @Autowired
-    public AuthController(JwtService jwtService, AuthService authenticationService) {
+    public AuthController(JwtService jwtService, AuthService authenticationService, UserService userService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
+        this.userService = userService;
     }
 
     @PostMapping("/signup")
@@ -44,6 +48,18 @@ public class AuthController {
         loginResponse.setExpiresIn(jwtService.getExpirationTime());
 
         return ResponseEntity.ok(loginResponse);
+    }
+
+    @PostMapping("/admin")
+    public ResponseEntity<User> createAdministrator(@RequestBody RegisterUserDTO registerUserDto) {
+        User createdAdmin = userService.createAdministrator(registerUserDto);
+        return ResponseEntity.ok(createdAdmin);
+    }
+
+    @PostMapping("/motoboy")
+    public ResponseEntity<User> createMotoboy(@RequestBody RegisterUserDTO registerUserDto) {
+        User createdMotoboy = userService.createMotoboy(registerUserDto);
+        return ResponseEntity.ok(createdMotoboy);
     }
 }
 

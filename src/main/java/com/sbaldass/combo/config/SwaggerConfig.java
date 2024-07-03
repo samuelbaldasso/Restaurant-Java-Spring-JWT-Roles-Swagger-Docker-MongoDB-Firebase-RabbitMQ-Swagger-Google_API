@@ -31,10 +31,10 @@ public class SwaggerConfig {
         License mitLicense = new License().name("MIT License").url("https://choosealicense.com/licenses/mit/");
 
         Info info = new Info()
-                .title("Backend para Bibliotecas com Autenticação JWT e Autorização por Roles - Java / Spring Boot")
+                .title("Combo")
                 .version("1.0")
                 .contact(contact)
-                .description("Este projeto é um backend para um sistema de bibliotecas. Ele oferece funcionalidades como autenticação e autorização de usuários, utilizando tokens JWT (JSON Web Tokens) e um sistema de roles. O backend é construído em Java / Spring Boot com o banco de dados PostgreSQL.")
+                .description("Este projeto é um backend para o sistema mobile Combo.")
                 .license(mitLicense);
 
         return new OpenAPI().info(info).servers(List.of(devServer));

@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -30,7 +31,7 @@ public class AuthService {
     private AuthenticationManager authenticationManager;
 
     public User signup(RegisterUserDTO input) {
-        Optional<Role> optionalRole = roleRepository.findByName(RoleName.USER);
+        Optional<Role> optionalRole = roleRepository.findByName(RoleName.CUSTOMER);
 
         if (optionalRole.isEmpty()) {
             return null;
@@ -40,6 +41,7 @@ public class AuthService {
         user.setFullName(input.getFullName());
         user.setRole(optionalRole.get());
         user.setEmail(input.getEmail());
+        user.setCreatedAt(LocalDate.now());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
 
         return userRepository.save(user);
@@ -56,22 +58,6 @@ public class AuthService {
 
         return userRepository.findByEmail(input.getEmail())
                 .orElseThrow();
-    }
-
-    public User adminSignUp(RegisterUserDTO input) {
-        Optional<Role> optionalRole = roleRepository.findByName(RoleName.ADMIN);
-
-        if (optionalRole.isEmpty()) {
-            return null;
-        }
-
-        User user = new User();
-        user.setFullName(input.getFullName());
-        user.setRole(optionalRole.get());
-        user.setEmail(input.getEmail());
-        user.setPassword(passwordEncoder.encode(input.getPassword()));
-
-        return userRepository.save(user);
     }
 
 }
