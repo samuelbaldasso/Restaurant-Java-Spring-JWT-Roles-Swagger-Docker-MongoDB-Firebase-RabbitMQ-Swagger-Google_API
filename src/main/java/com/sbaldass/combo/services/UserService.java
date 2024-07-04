@@ -49,6 +49,10 @@ public class UserService {
                 .setRole(optionalRole.get());
         user
                 .setCreatedAt(LocalDate.now());
+        user
+                .setPhoneNumber(input.getPhoneNumber());
+        user
+                .setPhotoUrl(input.getPhotoUrl());
 
         return userRepository.save(user);
     }
@@ -71,6 +75,10 @@ public class UserService {
                 .setRole(optionalRole.get());
         user
                 .setCreatedAt(LocalDate.now());
+        user
+                .setPhoneNumber(input.getPhoneNumber());
+        user
+                .setPhotoUrl(input.getPhotoUrl());
 
         return userRepository.save(user);
     }
@@ -86,6 +94,10 @@ public class UserService {
                 .setPassword(passwordEncoder.passwordEncoder().encode(input.getPassword()));
         user
                 .setCreatedAt(LocalDate.now());
+        user
+                .setPhoneNumber(input.getPhoneNumber());
+        user
+                .setPhotoUrl(input.getPhotoUrl());
 
         return userRepository.save(user);
     }

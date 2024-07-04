@@ -82,6 +82,15 @@ public class JwtService {
                 .getBody();
     }
 
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(getSignInKey()).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode((Objects.requireNonNull(environment.getProperty("security.jwt.secret-key"))));
         return Keys.hmacShaKeyFor(keyBytes);

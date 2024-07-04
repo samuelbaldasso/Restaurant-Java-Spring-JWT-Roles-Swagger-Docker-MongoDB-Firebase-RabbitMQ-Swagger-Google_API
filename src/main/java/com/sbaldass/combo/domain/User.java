@@ -38,6 +38,10 @@ public class User implements UserDetails {
 
     private Role role;
 
+    private String phoneNumber;
+
+    private String photoUrl;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.getName());
