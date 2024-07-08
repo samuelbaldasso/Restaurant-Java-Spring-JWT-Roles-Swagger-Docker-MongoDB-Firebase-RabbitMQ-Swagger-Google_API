@@ -6,23 +6,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Jacksonized
-@Document(collection = "invoices")
-public class Invoice {
+@Document(collection = "motoboys")
+public class Motoboy {
+
     @Id
     private String id;
+    private String name;
 
-    private String orderId;
-    private LocalDateTime invoiceDate;
-    private double totalAmount;
-    private String customerId;
+    @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
+    private Location location;
 
+    private MotoboyStatus status;
+
+    private int rating;
 }
+

@@ -8,20 +8,19 @@ import lombok.extern.jackson.Jacksonized;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Jacksonized
-@Document(collection = "tracking_history")
-public class TrackingHistory {
+@Document(collection = "motoboy_requests")
+public class MotoboyRequest {
     @Id
-    private Long id;
-    private String orderId;
-    private double latitude;
-    private double longitude;
-    private LocalDateTime timestamp;
+    private String id;
+    private Location pickupLocation;
+    private Location dropoffLocation;
+    private String userId;
+    private String motoboyId;
+    private MotoboyStatus status;
 
 }

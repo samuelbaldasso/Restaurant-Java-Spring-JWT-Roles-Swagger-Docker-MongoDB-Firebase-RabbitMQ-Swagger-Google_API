@@ -41,9 +41,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
                         .requestMatchers("/auth/**", "/v3/api-docs/**", "swagger-ui/**")
                         .permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/motoboy/**").hasRole("MOTOBOY")
-                        .requestMatchers("/customer/**").hasRole("CUSTOMER")
                         .anyRequest()
                         .authenticated());
         http.sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
