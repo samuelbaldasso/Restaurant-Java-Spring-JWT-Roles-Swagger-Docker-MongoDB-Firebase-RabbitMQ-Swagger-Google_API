@@ -48,7 +48,7 @@ public class MotoboyAssignmentService {
             // Handle case where no motoboy is available
             request.setStatus(MotoboyStatus.BUSY);
             motoboyRequestRepository.save(request);
-//            notificationService.notifyUserNoMotoboyAvailable(request.getUserId());
+            notificationService.notifyUserNoMotoboyAvailable(request.getUserId());
         }
     }
 

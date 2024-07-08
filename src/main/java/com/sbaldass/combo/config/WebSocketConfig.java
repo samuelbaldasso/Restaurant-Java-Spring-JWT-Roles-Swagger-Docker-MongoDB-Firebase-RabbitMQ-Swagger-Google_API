@@ -1,23 +1,33 @@
 package com.sbaldass.combo.config;
 
+import com.sbaldass.combo.services.GoogleGeolocationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.reactive.socket.WebSocketHandler;
+import org.springframework.web.reactive.socket.server.WebSocketService;
+import org.springframework.web.reactive.socket.server.support.HandshakeWebSocketService;
+import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
+import org.springframework.web.reactive.socket.server.upgrade.ReactorNettyRequestUpgradeStrategy;
 
 @Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+public class WebSocketConfig {
 
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
-        config.setApplicationDestinationPrefixes("/app");
+    @Autowired
+    private GoogleGeolocationService geolocationService;
+
+    @Bean
+    public WebSocketHandlerAdapter handlerAdapter() {
+        return new WebSocketHandlerAdapter(webSocketService());
     }
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/track").setAllowedOrigins("*").withSockJS();
+    @Bean
+    public WebSocketService webSocketService() {
+        return new HandshakeWebSocketService(new ReactorNettyRequestUpgradeStrategy());
+    }
+
+    @Bean
+    public WebSocketHandler locationWebSocketHandler() {
+        return new LocationWebSocketHandler(geolocationService);
     }
 }

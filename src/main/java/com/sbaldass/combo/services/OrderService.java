@@ -83,8 +83,8 @@ public class OrderService {
     }
 
     private void notifyMotoboys(Order order) {
-        // Placeholder for notifying motoboys about the new order
-        // This could be implemented using a message queue, push notifications, etc.
+        sendTrackingUpdate(order);
+
     }
 
     private OrderResponseDTO mapToOrderResponseDto(Order order) {
@@ -103,8 +103,6 @@ public class OrderService {
     private void sendTrackingUpdate(Order order) {
         TrackingMessageDto trackingMessage = new TrackingMessageDto();
         trackingMessage.setOrderId(order.getId());
-        trackingMessage.setLatitude(0.0); // Dummy latitude
-        trackingMessage.setLongitude(0.0); // Dummy longitude
         trackingMessage.setStatus(order.getOrderStatus());
 
         messagingTemplate.convertAndSend("/topic/track", trackingMessage);

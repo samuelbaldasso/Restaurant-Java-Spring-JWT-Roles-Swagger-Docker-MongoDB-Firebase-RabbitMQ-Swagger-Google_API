@@ -1,5 +1,6 @@
 package com.sbaldass.combo.services;
 
+import com.sbaldass.combo.domain.Location;
 import com.sbaldass.combo.domain.Motoboy;
 import com.sbaldass.combo.domain.MotoboyRequest;
 import com.sbaldass.combo.domain.MotoboyStatus;
@@ -34,4 +35,23 @@ public class MotoboyService {
         rabbitTemplate.convertAndSend("motoboyRequestsQueue", request);
     }
 
+    public void acceptRequest(String requestId, String name) {
+        // Send request to the queue
+        rabbitTemplate.convertAndSend("motoboyAcceptQueue", requestId);
+    }
+
+    public void rejectRequest(String requestId, String name) {
+        // Send request to the queue
+        rabbitTemplate.convertAndSend("motoboyRejectQueue", requestId);
+    }
+
+    public void updateLocation(String motoboyId, String newLocation) {
+        Motoboy motoboy = motoboyRepository.findById(motoboyId).
+                orElseThrow(() -> new IllegalArgumentException("Invalid motoboy ID"));
+
+        String[] location = newLocation
+                .split(",");
+        motoboy.setLocation(new Location(Double.parseDouble(location[1]), Double.parseDouble(location[0])));
+        motoboyRepository.save(motoboy);
+    }
 }
